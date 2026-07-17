@@ -1,0 +1,35 @@
+2026-07-17 15:06:37 | INFO     | ============================================================
+2026-07-17 15:06:37 | INFO     | PIPELINE START — run_id=20260717_120637  dry_run=False
+2026-07-17 15:06:37 | INFO     | ============================================================
+2026-07-17 15:06:37 | INFO     | EXTRACT — Reading from: data/ops_sensor_log_dirty.csv
+2026-07-17 15:06:37 | INFO     | EXTRACT — Loaded 1,018 rows × 6 columns
+2026-07-17 15:06:37 | DEBUG    | EXTRACT — Columns: ['timestamp', 'pressure_bar', 'temperature_c', 'flow_rate_m3h', 'zone', 'operator_id']
+2026-07-17 15:06:37 | DEBUG    | EXTRACT — Raw null counts:
+{'timestamp': 0, 'pressure_bar': 38, 'temperature_c': 30, 'flow_rate_m3h': 25, 'zone': 0, 'operator_id': 0}
+2026-07-17 15:06:37 | INFO     | VALIDATE — Running Great Expectations suite on raw data
+2026-07-17 15:06:37 | INFO     | VALIDATE — Building ephemeral GE context
+2026-07-17 15:06:37 | INFO     | VALIDATE ✓  expect_table_row_count_to_be_between
+2026-07-17 15:06:37 | INFO     | VALIDATE ✓  expect_column_values_to_be_between
+2026-07-17 15:06:37 | INFO     | VALIDATE ✓  expect_column_values_to_be_between
+2026-07-17 15:06:37 | INFO     | VALIDATE ✓  expect_column_values_to_be_between
+2026-07-17 15:06:37 | INFO     | VALIDATE ✓  expect_column_values_to_not_be_null
+2026-07-17 15:06:37 | INFO     | VALIDATE ✓  expect_column_values_to_match_regex
+2026-07-17 15:06:37 | INFO     | VALIDATE ✓  expect_column_values_to_be_in_set
+2026-07-17 15:06:37 | INFO     | VALIDATE — Suite complete: ALL PASSED (7/7 passed)
+2026-07-17 15:06:37 | INFO     | VALIDATE — All expectations passed ✓
+2026-07-17 15:06:37 | INFO     | TRANSFORM — Starting cleaning pipeline
+2026-07-17 15:06:37 | INFO     | TRANSFORM — Step 1: dropped 6 unparseable timestamp rows
+2026-07-17 15:06:37 | INFO     | TRANSFORM — Step 3: removed 10 duplicate rows
+2026-07-17 15:06:37 | INFO     | TRANSFORM — Step 4: zone labels → ['ZONE A', 'ZONE B', 'ZONE C']
+2026-07-17 15:06:37 | INFO     | TRANSFORM — Step 5: nulled impossible readings — pressure=18, temp=0, flow=0
+2026-07-17 15:06:37 | INFO     | TRANSFORM — Step 6: interpolated 56 nulls in 'pressure_bar'
+2026-07-17 15:06:37 | INFO     | TRANSFORM — Step 6: interpolated 30 nulls in 'temperature_c'
+2026-07-17 15:06:37 | INFO     | TRANSFORM — Step 6: interpolated 25 nulls in 'flow_rate_m3h'
+2026-07-17 15:06:37 | INFO     | TRANSFORM — Complete: 1018 rows in → 1002 rows out (16 dropped total)
+2026-07-17 15:06:37 | DEBUG    | TRANSFORM — Final null check: 0 nulls
+2026-07-17 15:06:37 | INFO     | LOAD — Target: data/ops_pipeline.db → table 'cleaned_sensor_log'
+2026-07-17 15:06:37 | INFO     | LOAD — Dropped existing 'cleaned_sensor_log' table (idempotent reset)
+2026-07-17 15:06:37 | INFO     | LOAD — Wrote 1,002 rows to 'cleaned_sensor_log'
+2026-07-17 15:06:37 | INFO     | LOAD — Verified: 1,002 rows confirmed in database ✓
+2026-07-17 15:06:37 | INFO     | PIPELINE END — run_id=20260717_120637  elapsed=0.36s
+2026-07-17 15:06:37 | INFO     | ============================================================
