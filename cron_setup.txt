@@ -1,0 +1,60 @@
+================================================================================
+AUTOMATION PROOF — KPC Ops ETL Pipeline
+Week 4, KPC Cohort · Inuka Fellowship · Lameck Irungu
+================================================================================
+
+────────────────────────────────────────────────────────────────────────────────
+LINUX / macOS — cron job
+────────────────────────────────────────────────────────────────────────────────
+
+To edit your crontab:
+    crontab -e
+
+Add this line (runs daily at 06:00, logs stdout/stderr to cron.log):
+
+    0 6 * * * /home/lamiru/Documents/plp_projects/plp_data/week4_etl_pipeline/venv/bin/python /home/lamiru/Documents/plp_projects/plp_data/week4_etl_pipeline/run_pipeline.py >> /home/lamiru/Documents/plp_projects/plp_data/week4_etl_pipeline/cron.log 2>&1
+
+To verify it was saved:
+    crontab -l
+
+Cron syntax reference:
+    ┌─────────── minute (0)
+    │ ┌───────── hour (6)
+    │ │ ┌─────── day of month (* = every day)
+    │ │ │ ┌───── month (* = every month)
+    │ │ │ │ ┌─── day of week (* = every day)
+    0 6 * * * <command>
+
+────────────────────────────────────────────────────────────────────────────────
+WINDOWS — Task Scheduler (command line setup)
+────────────────────────────────────────────────────────────────────────────────
+
+Run this once in PowerShell (as Administrator) to create the scheduled task:
+
+    schtasks /create ^
+      /tn "KPC_ETL_Pipeline" ^
+      /tr "C:\Users\Lameck\plp_projects\plp_data\week4_etl_pipeline\venv\Scripts\python.exe C:\Users\Lameck\plp_projects\plp_data\week4_etl_pipeline\run_pipeline.py" ^
+      /sc DAILY ^
+      /st 06:00 ^
+      /ru SYSTEM ^
+      /f
+
+To verify it was created:
+    schtasks /query /tn "KPC_ETL_Pipeline"
+
+To run it immediately (for testing):
+    schtasks /run /tn "KPC_ETL_Pipeline"
+
+To delete it:
+    schtasks /delete /tn "KPC_ETL_Pipeline" /f
+
+────────────────────────────────────────────────────────────────────────────────
+NOTES
+────────────────────────────────────────────────────────────────────────────────
+- The pipeline writes all output to pipeline.log — check there if a scheduled
+  run produces unexpected results.
+- Use the full absolute path to the venv Python interpreter, not just "python",
+  to ensure the correct environment is used by the scheduler.
+- The .env file must exist in the same directory as run_pipeline.py for
+  environment variables to load correctly when run by the scheduler.
+================================================================================
